@@ -1,6 +1,4 @@
-﻿using API_BLOG.Models.Dtos.Usuario;
-
-namespace API_BLOG.Models.Dtos.Login
+﻿namespace API_BLOG.Models.Dtos.Login
 {
     public class LoginResponseDto
     {

@@ -1,6 +1,4 @@
-﻿using API_BLOG.Models.Dtos.Usuario;
-
-namespace API_BLOG.Models.Dtos.Register
+﻿namespace API_BLOG.Models.Dtos.Register
 {
     public class RegisterResponseDto
     {

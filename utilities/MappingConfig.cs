@@ -1,6 +1,7 @@
-﻿using API_BLOG.Models;
+﻿using API_BLOG.Models.Dtos;
+using API_BLOG.Models.Dtos.Comment;
 using API_BLOG.Models.Dtos.Post;
-using API_BLOG.Models.Dtos.Usuario;
+using API_BLOG.Models.Entitys;
 using AutoMapper;
 
 namespace API_BLOG.utilities
@@ -16,6 +17,12 @@ namespace API_BLOG.utilities
             CreateMap<Post, PostDto>().ReverseMap();
             CreateMap<Post, PostCreateDto>().ReverseMap();
             CreateMap<Post, PostUpdateDto>().ReverseMap();
+
+            //comentarios
+            CreateMap<Comment, CommentCreateDto>().ReverseMap();
+            CreateMap<Comment, CommentDto>().ReverseMap();
+            CreateMap<Comment, CommentUpdateDto>().ReverseMap();
+            CreateMap<Comment, CommentSearchDto>().ReverseMap();
         }
     }
 }

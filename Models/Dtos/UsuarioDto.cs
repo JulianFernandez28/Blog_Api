@@ -1,4 +1,4 @@
-﻿namespace API_BLOG.Models.Dtos.Usuario
+﻿namespace API_BLOG.Models.Dtos
 {
     public class UsuarioDto
     {

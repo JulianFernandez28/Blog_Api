@@ -1,5 +1,5 @@
 using API_BLOG.Data;
-using API_BLOG.Models;
+using API_BLOG.Models.Entitys;
 using API_BLOG.Repository;
 using API_BLOG.Repository.IRepository;
 using API_BLOG.utilities;
@@ -83,6 +83,9 @@ builder.Services.AddIdentity<Usuario, IdentityRole>().AddEntityFrameworkStores<A
 
 builder.Services.AddAutoMapper(typeof(MappingConfig).Assembly);
 builder.Services.AddScoped<IUsuarioRepository, UserRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+
 
 builder.Services.AddCors(options =>
 {

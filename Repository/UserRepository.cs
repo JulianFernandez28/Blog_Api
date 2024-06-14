@@ -1,8 +1,6 @@
 ﻿using API_BLOG.Data;
 using API_BLOG.Models.Dtos.Login;
 using API_BLOG.Models.Dtos.Register;
-using API_BLOG.Models.Dtos.Usuario;
-using API_BLOG.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +9,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using API_BLOG.Repository.IRepository;
+using API_BLOG.Models.Entitys;
+using API_BLOG.Models.Dtos;
 
 namespace API_BLOG.Repository
 {
