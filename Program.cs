@@ -1,4 +1,5 @@
 using API_BLOG.Data;
+using API_BLOG.Helpers;
 using API_BLOG.Models.Entitys;
 using API_BLOG.Repository;
 using API_BLOG.Repository.IRepository;
@@ -79,8 +80,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+
+
 builder.Services.AddIdentity<Usuario, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.Configure<CloudfinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddAutoMapper(typeof(MappingConfig).Assembly);
 builder.Services.AddScoped<IUsuarioRepository, UserRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();

@@ -81,3 +81,5 @@ C:\Users\ferna\OneDrive\Documents\UTM\9no cuatri\web progresiva\Blog\API_BLOG\ob
 C:\Users\ferna\OneDrive\Documents\UTM\9no cuatri\web progresiva\Blog\API_BLOG\obj\Debug\net7.0\API_BLOG.pdb
 C:\Users\ferna\OneDrive\Documents\UTM\9no cuatri\web progresiva\Blog\API_BLOG\obj\Debug\net7.0\API_BLOG.genruntimeconfig.cache
 C:\Users\ferna\OneDrive\Documents\UTM\9no cuatri\web progresiva\Blog\API_BLOG\obj\Debug\net7.0\ref\API_BLOG.dll
+C:\Users\ferna\OneDrive\Documents\UTM\9no cuatri\web progresiva\Blog\API_BLOG\bin\Debug\net7.0\CloudinaryDotNet.dll
+C:\Users\ferna\OneDrive\Documents\UTM\9no cuatri\web progresiva\Blog\API_BLOG\bin\Debug\net7.0\dotenv.net.dll

@@ -12,6 +12,9 @@ namespace API_BLOG.Models.Entitys
         public string Title { get; set; }
         [Required]
         public string Content { get; set; }
+
+        public string Image { get; set; } = string.Empty;
+
         public bool Status { get; set; } = true;
         [Required]
         public string UsuarioId { get; set; }

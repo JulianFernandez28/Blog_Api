@@ -13,5 +13,7 @@ namespace API_BLOG.Models.Dtos.Post
         [Required]
         public string UsuarioId { get; set; }
 
+        public IFormFile Image { get; set; }
+
     }
 }

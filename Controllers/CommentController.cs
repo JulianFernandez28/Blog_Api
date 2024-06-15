@@ -5,8 +5,10 @@ using API_BLOG.Models.Specifications;
 using API_BLOG.Repository;
 using API_BLOG.Repository.IRepository;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Net;
 using System.Reflection.Metadata;
 
@@ -28,6 +30,7 @@ namespace API_BLOG.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,6 +54,7 @@ namespace API_BLOG.Controllers
         }
 
         [HttpGet("CommentPaginado")]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -59,7 +63,7 @@ namespace API_BLOG.Controllers
             try
             {
                 var filter = _commentRepository.GetBy(comment);
-                var commentList = _commentRepository.GetAllPaginado(parameters, filter: filter);
+                var commentList = _commentRepository.GetAllPaginado(parameters, filter: filter, includProperties:"Usuario");
                 _response.Resultado = _mapper.Map<IEnumerable<CommentDto>>(commentList);
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.TotalPaginas = commentList.MetaData.TotalPages;
@@ -107,6 +111,7 @@ namespace API_BLOG.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -145,6 +150,10 @@ namespace API_BLOG.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateComment(int id, [FromBody]CommentUpdateDto commentUpdate)
         {
             if(commentUpdate is null)
@@ -163,6 +172,10 @@ namespace API_BLOG.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             try

@@ -12,6 +12,8 @@ namespace API_BLOG.Models.Dtos.Post
         [Required]
         public string Content { get; set; }
 
+        public string Image { get; set; }
+
         public string UsuarioId { get; set; }
 
         public Usuario Usuario { get; set; }

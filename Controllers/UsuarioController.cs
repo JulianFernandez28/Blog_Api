@@ -2,6 +2,7 @@
 using API_BLOG.Models.Dtos.Login;
 using API_BLOG.Models.Dtos.Register;
 using API_BLOG.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -21,6 +22,7 @@ namespace API_BLOG.Controllers
             _response = new();
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto modelo)
         {
@@ -38,6 +40,7 @@ namespace API_BLOG.Controllers
             _response.Resultado = loginresponse;
             return Ok(_response);
         }
+        [AllowAnonymous]
         [HttpPost("registrar")]
         public async Task<IActionResult> Registrar([FromBody] RegisterRequestDto modelo)
         {

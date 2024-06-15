@@ -12,5 +12,7 @@ namespace API_BLOG.Models.Dtos.Comment
 
         [Required]
         public int PostId { get; set; }
+
+        public IFormFile Image { get; set; }
     }
 }

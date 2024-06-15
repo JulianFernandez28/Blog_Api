@@ -4,9 +4,12 @@ using API_BLOG.Models.Entitys;
 using API_BLOG.Models.Specifications;
 using API_BLOG.Repository.IRepository;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace API_BLOG.Controllers
 {
@@ -26,6 +29,7 @@ namespace API_BLOG.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -50,6 +54,7 @@ namespace API_BLOG.Controllers
         }
 
         [HttpGet("PostPaginado")]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -75,6 +80,7 @@ namespace API_BLOG.Controllers
         }
 
         [HttpGet("{id:int}", Name ="GetPost")]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -112,10 +118,11 @@ namespace API_BLOG.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<APIResponse>> CreatePost([FromBody]PostCreateDto createDto)
+        public async Task<ActionResult<APIResponse>> CreatePost([FromForm]PostCreateDto createDto)
         {
             try
             {
@@ -138,6 +145,12 @@ namespace API_BLOG.Controllers
 
                 Post modelo =  _mapper.Map<Post>(createDto);
 
+                if (modelo.Image != null)
+                {
+                    var image = await _postRepository.UploadImage(createDto);
+                    modelo.Image = Convert.ToString(image.SecureUrl.AbsoluteUri);
+                }
+
                 modelo.CreateOn = DateTime.Now;
                 modelo.UpdateOn = DateTime.Now;
                 await _postRepository.Create(modelo);
@@ -157,10 +170,11 @@ namespace API_BLOG.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdatePost(int id, [FromBody]PostUpdateDto updateDto) 
+        public async Task<IActionResult> UpdatePost(int id, [FromForm]PostCreateDto updateDto) 
         {
             if(updateDto == null)
             {
@@ -170,6 +184,11 @@ namespace API_BLOG.Controllers
             }
 
             Post modelo = _mapper.Map<Post>(updateDto);
+            if (modelo.Image != null)
+            {
+                var image = await _postRepository.UploadImage(updateDto);
+                modelo.Image = Convert.ToString(image.SecureUrl.AbsoluteUri);
+            }
 
             await _postRepository.Update(modelo);
             _response.StatusCode = HttpStatusCode.NoContent;
@@ -178,6 +197,10 @@ namespace API_BLOG.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "admin, user", AuthenticationSchemes = "Bearer")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -199,6 +222,46 @@ namespace API_BLOG.Controllers
                 }
 
                 await _postRepository.Delete(post);
+                _response.StatusCode = HttpStatusCode.NoContent;
+
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+
+                _response.IsExitoso = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+
+            return Ok(_response);
+        }
+
+        [HttpDelete("remove/{id:int}")]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteComplet(int id)
+        {
+            try
+            {
+                if (id == 0)
+                {
+                    _response.IsExitoso = false;
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
+                var post = await _postRepository.Get(x => x.Id == id);
+
+                if (post is null)
+                {
+                    _response.IsExitoso = false;
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound();
+                }
+
+                await _postRepository.Remove(post);
                 _response.StatusCode = HttpStatusCode.NoContent;
 
                 return Ok(_response);

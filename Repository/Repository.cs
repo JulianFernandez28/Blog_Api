@@ -72,6 +72,8 @@ namespace API_BLOG.Repository
         {
             IQueryable<T> query = dbSet;
 
+            
+
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -85,6 +87,10 @@ namespace API_BLOG.Repository
                 }
             }
 
+            query = query.OrderByDescending(n => n);
+
+            
+            
             return PagedList<T>.ToPagedList(query, parameters.PageNumber, parameters .PageSize);
         }
 

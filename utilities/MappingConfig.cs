@@ -24,5 +24,6 @@ namespace API_BLOG.utilities
             CreateMap<Comment, CommentUpdateDto>().ReverseMap();
             CreateMap<Comment, CommentSearchDto>().ReverseMap();
         }
+
     }
 }
