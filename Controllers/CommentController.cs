@@ -156,6 +156,15 @@ namespace API_BLOG.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateComment(int id, [FromBody]CommentUpdateDto commentUpdate)
         {
+            var oldComment = await _commentRepository.Get(c => c.Id == id);
+
+            if (oldComment is null)
+            {
+                _response.IsExitoso = false;
+                _response.StatusCode = HttpStatusCode.NotFound;
+                return BadRequest(_response);
+            }
+
             if(commentUpdate is null)
             {
                 _response.IsExitoso = false;
@@ -164,6 +173,8 @@ namespace API_BLOG.Controllers
             }
 
             Comment modelo = _mapper.Map<Comment>(commentUpdate);
+            modelo.Id = id;
+            modelo.CreateOn = oldComment.CreateOn;
 
             await _commentRepository.Update(modelo);
             _response.StatusCode = HttpStatusCode.NoContent;

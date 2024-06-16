@@ -174,8 +174,17 @@ namespace API_BLOG.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdatePost(int id, [FromForm]PostCreateDto updateDto) 
+        public async Task<IActionResult> UpdatePost(int id, [FromBody]PostUpdateDto updateDto) 
         {
+            var oldPost = await _postRepository.Get(p => p.Id == id,tracked:false);
+
+            if (oldPost is null)
+            {
+                _response.IsExitoso = false;
+                _response.StatusCode = HttpStatusCode.NotFound;
+                return NotFound(_response);
+            }
+
             if(updateDto == null)
             {
                 _response.IsExitoso = false;
@@ -184,11 +193,13 @@ namespace API_BLOG.Controllers
             }
 
             Post modelo = _mapper.Map<Post>(updateDto);
-            if (modelo.Image != null)
+            modelo.Id = id;
+            modelo.CreateOn = oldPost.CreateOn;
+            /*if (modelo.Image != null)
             {
                 var image = await _postRepository.UploadImage(updateDto);
                 modelo.Image = Convert.ToString(image.SecureUrl.AbsoluteUri);
-            }
+            }*/
 
             await _postRepository.Update(modelo);
             _response.StatusCode = HttpStatusCode.NoContent;
